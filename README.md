@@ -37,7 +37,7 @@ To run the tests, you can do following:
 $ vagrant exec ./go clean test
 ```
 
-Refer to Selenium [wiki](https://code.google.com/p/selenium/wiki) page for build system details.
+Refer to Selenium [wiki](https://github.com/SeleniumHQ/selenium/wiki/Crazy-Fun-Build) page for build system details.
 
 By default, Vagrant tries to sync your Selenium sources from `../selenium` directory.
 This can be altered by exporting `SELENIUM_PATH` variable.

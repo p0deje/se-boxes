@@ -1,5 +1,17 @@
 Vagrant.configure(2) do |config|
-  config.vm.synced_folder ENV['SELENIUM_PATH'] || '../selenium', '/selenium'
+  SYNCED_FOLDERS = [{
+    host: ENV['SELENIUM_PATH'] || '../selenium',
+    guest: '/selenium'
+  }, {
+    host: ENV['WATIR_PATH'] || '../watir-webdriver',
+    guest: '/watir-webdriver'
+  }].freeze
+
+  SYNCED_FOLDERS.each do |synced_folder|
+    if Dir.exist?(synced_folder[:host])
+      config.vm.synced_folder synced_folder[:host], synced_folder[:guest]
+    end
+  end
 
   config.vm.define :ubuntu do |ubuntu|
     ubuntu.vm.box = 'hashicorp/precise64'

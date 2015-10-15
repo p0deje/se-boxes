@@ -55,3 +55,8 @@ package {'chromedriver2':
   ensure   => $chromedriver_version,
   provider => 'chocolatey',
 }
+
+windows_path {'use-prebuilt-IEDriverServer':
+  ensure    => present,
+  directory => 'C:\selenium\cpp\prebuilt\x64\Release',
+}

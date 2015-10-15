@@ -39,19 +39,27 @@ $ librarian-puppet install
 ### Ubuntu
 
 ```bash
-$ export FIREFOX_VERSION=35 # change to any major version you want
+$ export FIREFOX_VERSION="35" # change to any major version you want
 $ vagrant up ubuntu
 ```
 
 To quickly change Firefox version, you can do following:
 
 ```bash
-$ export FIREFOX_VERSION=30
+$ export FIREFOX_VERSION="30"
 $ vagrant provision ubuntu
 ```
 
 Vagrant exposes VNC to the host, so you can connect to `localhost:5901` with any
 VNC client and see what is actually happening in the box.
+
+To run Selenium tests, you can do something like this:
+
+```bash
+$ vagrant ssh ubuntu
+$ cd /selenium
+$ ./go clean test
+```
 
 ### Windows 7
 
@@ -59,20 +67,58 @@ VNC client and see what is actually happening in the box.
 $ vagrant up win7
 ```
 
+To quickly change browser/driver versions, you can do following:
+
+```bash
+$ export FIREFOX_VERSION="33.0"
+$ export CHROME_VERSION="44.0.2403.89"
+$ export PHANTOMJS_VERSION="1.9.8"
+$ export CHROMEDRIVER_VERSION="2.10"
+$ vagrant provision win7
+```
+
+Refer to the following chocolatey packages to figure out available versions:
+
+* [firefox](https://chocolatey.org/packages/firefox)
+* [google-chrome-x64](https://chocolatey.org/packages/google-chrome-x64)
+* [phantomjs](https://chocolatey.org/packages/phantomjs)
+* [chromedriver2](https://chocolatey.org/packages/chromedriver2)
+
 Instead of VNC, Windows VM is started with GUI.
 
-Switching browser versions is currently unsupported.
+To run Selenium tests, you can do something like this:
+
+```bash
+$ vagrant ssh win7
+$ cd C:\selenium
+$ ./go.bat clean test
+```
 
 ## Selenium
 
-By default, Vagrant tries to sync your Selenium sources from `../selenium` directory.
-This can be altered by exporting `SELENIUM_PATH` variable.
+By default, Vagrant tries to sync your Selenium sources from `../selenium`
+to `/selenium` directories. Source directory can be altered by exporting
+`SELENIUM_PATH` variable.
 
 Refer to Selenium [wiki](https://github.com/SeleniumHQ/selenium/wiki/Crazy-Fun-Build)
 page for build system details.
 
+## Watir
+
+By default, Vagrant tries to sync your Watir sources from `../watir-webdriver`
+to `/watir-webdriver` directories. Source directory can be altered by exporting
+`WATIR_PATH` variable.
+
 ## TODO
 
-* Apply firewall rules in Windows to avoid asking for Ruby/PhantomJS permissions.
+* Add Windows 10 image for Microsoft Edge testing.
+
+### Ubuntu
+
+* Add more browsers/drivers
+
+### Windows 7
+
 * Install drivers automatically
-* Test browser version change in Windows VM
+* Test browser version changes
+* Install different IE versions

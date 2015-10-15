@@ -56,5 +56,7 @@ Vagrant.configure(2) do |config|
         'chromedriver_version' => ENV['CHROMEDRIVER_VERSION'] || 'latest',
       }
     end
+    # Need to reboot machine for IE installation to finish.
+    windows.vm.provision :reload
   end
 end

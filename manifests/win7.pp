@@ -50,3 +50,8 @@ exec {'install-rubydevkit':
   cwd     => 'C:\tools\DevKit2',
   require => File['config-rubydevkit'],
 }
+
+package {'chromedriver2':
+  ensure   => $chromedriver_version,
+  provider => 'chocolatey',
+}

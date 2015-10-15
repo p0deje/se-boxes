@@ -52,7 +52,8 @@ Vagrant.configure(2) do |config|
       puppet.facter = {
         'firefox_version' => ENV['FIREFOX_VERSION'] || 'latest',
         'phantomjs_version' => ENV['PHANTOMJS_VERSION'] || 'latest',
-        'chrome_version' => ENV['CHROME_VERSION'] || 'latest'
+        'chrome_version' => ENV['CHROME_VERSION'] || 'latest',
+        'chromedriver_version' => ENV['CHROMEDRIVER_VERSION'] || 'latest',
       }
     end
   end

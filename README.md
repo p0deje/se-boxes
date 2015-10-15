@@ -1,4 +1,4 @@
-# selenium-boxes
+# se-boxes
 
 Simple Vagrant + Puppet setup to easily test Selenium for different browser
 versions on different platforms.
@@ -23,8 +23,8 @@ $ vagrant plugin install vagrant-reload
 Now, clone repository:
 
 ```bash
-$ git clone https://github.com/p0deje/selenium-boxes.git
-$ cd selenium-boxes/
+$ git clone https://github.com/p0deje/se-boxes.git
+$ cd se-boxes/
 ```
 
 You need to install all Puppet dependencies first:

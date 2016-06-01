@@ -7,6 +7,7 @@ Currently provides with:
 
 * Ubuntu 12.04 x64 (Firefox)
 * Windows 7 x64
+* Windows 10 x64 (Edge)
 
 ## Installation
 
@@ -91,8 +92,20 @@ To run Selenium tests, you can do something like this:
 ```bash
 $ vagrant ssh win7
 $ cd C:\selenium
-$ ./go.bat clean test
+$ go.bat clean test
 ```
+
+### Windows 10
+
+```bash
+$ vagrant up win10
+```
+
+The box should only be used for testing of Microsoft Edge driver. There is
+no SSH installed, so all the operations should be done using GUI.
+
+You need to manually install [Microsoft WebDriver](https://www.microsoft.com/en-us/download/details.aspx?id=48212) and
+[add it to PATH](https://msdn.microsoft.com/en-us/library/office/ee537574(v=office.14).aspx).
 
 ## Selenium
 
@@ -111,8 +124,6 @@ to `/watir-webdriver` directories. Source directory can be altered by exporting
 
 ## TODO
 
-* Add Windows 10 image for Microsoft Edge testing.
-
 ### Ubuntu
 
 * Add more browsers/drivers
@@ -122,3 +133,7 @@ to `/watir-webdriver` directories. Source directory can be altered by exporting
 * Install drivers automatically
 * Test browser version changes
 * Install different IE versions
+
+### Windows 10
+
+* Install drivers automatically

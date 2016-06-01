@@ -1,17 +1,6 @@
 Vagrant.configure(2) do |config|
-  SYNCED_FOLDERS = [{
-    host: ENV['SELENIUM_PATH'] || '../selenium',
-    guest: '/selenium'
-  }, {
-    host: ENV['WATIR_PATH'] || '../watir-webdriver',
-    guest: '/watir-webdriver'
-  }].freeze
-
-  SYNCED_FOLDERS.each do |synced_folder|
-    if Dir.exist?(synced_folder[:host])
-      config.vm.synced_folder synced_folder[:host], synced_folder[:guest]
-    end
-  end
+  config.vm.synced_folder (ENV['SELENIUM_PATH'] || '../selenium'), '/selenium'
+  config.vm.synced_folder (ENV['WATIR_PATH'] || '../watir-webdriver'), '/watir-webdriver'
 
   config.vm.define :ubuntu do |ubuntu|
     ubuntu.vm.box = 'hashicorp/precise64'
@@ -42,7 +31,7 @@ Vagrant.configure(2) do |config|
       vbox.gui = true
     end
 
-    windows.vm.provision :shell, path: 'script/prepare_windows.cmd'
+    windows.vm.provision :shell, path: 'script/prepare_win7.cmd'
     # Need to reboot machine for Puppet installation to finish.
     windows.vm.provision :reload
     windows.vm.provision :puppet do |puppet|
@@ -57,6 +46,29 @@ Vagrant.configure(2) do |config|
       }
     end
     # Need to reboot machine for IE installation to finish.
+    windows.vm.provision :reload
+  end
+
+  config.vm.define :win10 do |windows|
+    windows.vm.box = 'modernIE/w10-edge'
+    windows.vm.guest = :windows
+    windows.vm.communicator = :winrm
+    windows.winrm.username = 'IEUser'
+    windows.winrm.password = 'Passw0rd!'
+
+    windows.vm.provider :virtualbox do |vbox|
+      vbox.gui = true
+    end
+
+    windows.vm.provision :shell, path: 'script/prepare_win10.cmd'
+    # Need to reboot machine for Puppet installation to finish.
+    windows.vm.provision :reload
+    windows.vm.provision :puppet do |puppet|
+      puppet.options = %w[--verbose]
+      puppet.module_path = 'modules'
+      puppet.manifest_file = 'win10.pp'
+    end
+    # Need to reboot machine for PATH to be updated.
     windows.vm.provision :reload
   end
 end

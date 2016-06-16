@@ -32,6 +32,8 @@ Vagrant.configure(2) do |config|
     end
 
     windows.vm.provision :shell, path: 'script/prepare_win7.cmd'
+    # TODO: this should be run before syncing folders
+    windows.vm.provision :shell, path: 'script/increase_shell_limits.ps1'
     # Need to reboot machine for Puppet installation to finish.
     windows.vm.provision :reload
     windows.vm.provision :puppet do |puppet|

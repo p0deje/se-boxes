@@ -1,6 +1,6 @@
 Vagrant.configure(2) do |config|
   config.vm.synced_folder (ENV['SELENIUM_PATH'] || '../selenium'), '/selenium'
-  config.vm.synced_folder (ENV['WATIR_PATH'] || '../watir-webdriver'), '/watir-webdriver'
+  config.vm.synced_folder (ENV['WATIR_PATH'] || '../watir'), '/watir'
 
   config.vm.define :ubuntu do |ubuntu|
     ubuntu.vm.box = 'hashicorp/precise64'

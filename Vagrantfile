@@ -52,7 +52,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.define :win10 do |windows|
-    windows.vm.box = 'modernIE/w10-edge'
+    windows.vm.box = 'Microsoft/EdgeOnWindows10'
     windows.vm.guest = :windows
     windows.vm.communicator = :winrm
     windows.winrm.username = 'IEUser'

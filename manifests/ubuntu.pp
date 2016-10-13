@@ -6,7 +6,7 @@ package {'build-essential':}
 
 class {'rbenv':}
 rbenv::plugin {'sstephenson/ruby-build':}
-rbenv::build {'2.1.2':
+rbenv::build {'2.3.0':
   global => true
 }
 

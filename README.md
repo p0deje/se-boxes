@@ -5,21 +5,17 @@ versions on different platforms.
 
 Currently provides with:
 
-* Ubuntu 12.04 x64 (Firefox)
-* Windows 7 x64
+* Windows 2012 x64 (Firefox, Chrome, IE11, PhantomJS)
 * Windows 10 x64 (Edge)
 
 ## Installation
 
-Make sure you have [Vagrant](https://www.vagrantup.com/downloads.html), [Ruby](https://www.ruby-lang.org/en/downloads/) and
-[Puppet](https://docs.puppetlabs.com/guides/install_puppet/pre_install.html#next-install-puppet) installed.
+Make sure you have the following installed:
 
-If you plan to use Windows VM, you'll also need [vagrant-reload](https://github.com/aidanns/vagrant-reload)
-plugin:
-
-```bash
-$ vagrant plugin install vagrant-reload
-```
+* [Puppet Agent](https://docs.puppet.com/puppet/4.9/#getting-started) (tested on 4.9.0)
+* [Ruby](https://www.ruby-lang.org) (tested on 2.3.3)
+* [Vagrant](https://www.vagrantup.com) (tested on 1.9.3)
+* [VirtualBox](https://www.virtualbox.org) (tested on 5.1.18)
 
 Now, clone repository:
 
@@ -32,68 +28,44 @@ You need to install all Puppet dependencies first:
 
 ```bash
 $ gem install librarian-puppet
+$ cd environments/windows/
 $ librarian-puppet install
 ```
 
 ## Usage
 
-### Ubuntu
+### Windows 2012
 
 ```bash
-$ export FIREFOX_VERSION="35" # change to any major version you want
-$ vagrant up ubuntu
+$ vagrant up win2012
 ```
 
-To quickly change Firefox version, you can do following:
-
-```bash
-$ export FIREFOX_VERSION="30"
-$ vagrant provision ubuntu
-```
-
-Vagrant exposes VNC to the host, so you can connect to `localhost:5901` with any
-VNC client and see what is actually happening in the box.
-
-To run Selenium tests, you can do something like this:
-
-```bash
-$ vagrant ssh ubuntu
-$ cd /selenium
-$ ./go clean test
-```
-
-### Windows 7
-
-```bash
-$ vagrant up win7
-```
+Username: **vagrant**.
+Password: **vagrant**.
 
 To quickly change browser/driver versions, you can do following:
 
 ```bash
-$ export FIREFOX_VERSION="33.0"
-$ export CHROME_VERSION="44.0.2403.89"
-$ export PHANTOMJS_VERSION="1.9.8"
-$ export CHROMEDRIVER_VERSION="2.10"
+$ export CHROME_VERSION="57.0.2987.110"
+$ export CHROMEDRIVER_VERSION="2.28"
+$ export FIREFOX_VERSION="52.0.1"
+$ export GECKODRIVER_VERSION="0.15.0"
+$ export PHANTOMJS_VERSION="2.1.1"
 $ vagrant provision win7
 ```
 
 Refer to the following chocolatey packages to figure out available versions:
 
+* [googlechrome](https://chocolatey.org/packages/googlechrome)
+* [chromedriver](https://chocolatey.org/packages/chromedriver)
 * [firefox](https://chocolatey.org/packages/firefox)
-* [google-chrome-x64](https://chocolatey.org/packages/google-chrome-x64)
+* [selenium-gecko-driver](https://chocolatey.org/packages/selenium-gecko-driver)
 * [phantomjs](https://chocolatey.org/packages/phantomjs)
-* [chromedriver2](https://chocolatey.org/packages/chromedriver2)
 
-Instead of VNC, Windows VM is started with GUI.
-
-To run Selenium tests, you can do something like this:
-
-```bash
-$ vagrant ssh win7
-$ cd C:\selenium
-$ go.bat clean test
-```
+The best way to connect to VM is to use `vagrant rdp win2012`. This command
+will open Remote Desktop connection to VM. You can use
+[Microsoft Remote Desktop](https://itunes.apple.com/ru/app/microsoft-remote-desktop)
+or any other RDP client.
 
 ### Windows 10
 
@@ -101,8 +73,7 @@ $ go.bat clean test
 $ vagrant up win10
 ```
 
-The box should only be used for testing of Microsoft Edge driver. There is
-no SSH installed, so all the operations should be done using GUI.
+The box should only be used for testing of Microsoft Edge driver.
 
 You need to manually install [Microsoft WebDriver](https://www.microsoft.com/en-us/download/details.aspx?id=48212) and
 [add it to PATH](https://msdn.microsoft.com/en-us/library/office/ee537574(v=office.14).aspx).
@@ -118,22 +89,6 @@ page for build system details.
 
 ## Watir
 
-By default, Vagrant tries to sync your Watir sources from `../watir-webdriver`
-to `/watir-webdriver` directories. Source directory can be altered by exporting
+By default, Vagrant tries to sync your Watir sources from `../watir`
+to `/watir` directories. Source directory can be altered by exporting
 `WATIR_PATH` variable.
-
-## TODO
-
-### Ubuntu
-
-* Add more browsers/drivers
-
-### Windows 7
-
-* Install drivers automatically
-* Test browser version changes
-* Install different IE versions
-
-### Windows 10
-
-* Install drivers automatically

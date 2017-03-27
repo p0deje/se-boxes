@@ -1,0 +1,6 @@
+forge 'https://forgeapi.puppetlabs.com'
+
+mod 'basti1302-windows_path'
+mod 'chocolatey-chocolatey'
+mod 'cyberious-pget'
+mod 'puppetlabs-java'

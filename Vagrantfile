@@ -2,59 +2,48 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder (ENV['SELENIUM_PATH'] || '../selenium'), '/selenium'
   config.vm.synced_folder (ENV['WATIR_PATH'] || '../watir'), '/watir'
 
-  config.vm.define :ubuntu do |ubuntu|
-    ubuntu.vm.box = 'hashicorp/precise64'
-    ubuntu.vm.network :forwarded_port, guest: 5900, host: 5901, id: 'vnc'
+  configure_windows = proc do |windows|
+    windows.vm.guest = :windows
 
-    ubuntu.vm.provider :virtualbox do |vbox|
-      vbox.memory = 1024
+    windows.vm.provider :virtualbox do |vbox|
+      vbox.cpus = 2 # use 1/4 of cores
+      vbox.memory = 2048 # use 1/4 of memory
+      vbox.customize ['modifyvm', :id, '--ioapic', 'on']
+      vbox.customize ['modifyvm', :id, '--cpuexecutioncap', '100']
+      vbox.customize ['modifyvm', :id, '--clipboard', 'bidirectional']
+      vbox.customize ['modifyvm', :id, '--hwvirtex', 'on']
+      vbox.customize ['modifyvm', :id, '--vram', '128']
+      vbox.customize ['modifyvm', :id, '--accelerate2dvideo', 'on']
     end
 
-    ubuntu.vm.provision :puppet do |puppet|
-      puppet.module_path = 'modules'
-      puppet.manifest_file = 'ubuntu.pp'
+    windows.vm.provision :shell, path: 'script/prepare_windows.cmd'
+    windows.vm.provision :puppet do |puppet|
+      puppet.options = '--verbose'
+      puppet.environment = 'windows'
+      puppet.environment_path = 'environments'
       puppet.facter = {
-        'firefox_version' => ENV['FIREFOX_VERSION']
+        'chrome_version' => ENV['CHROME_VERSION'] || 'latest',
+        'chromedriver_version' => ENV['CHROMEDRIVER_VERSION'] || 'latest',
+        'firefox_version' => ENV['FIREFOX_VERSION'] || 'latest',
+        'geckodriver_version' => ENV['GECKODRIVER_VERSION'] || 'latest',
+        'phantomjs_version' => ENV['PHANTOMJS_VERSION'] || 'latest',
       }
     end
   end
 
-  config.vm.define :win7 do |windows|
-    windows.vm.box = 'ferventcoder/win7pro-x64-nocm-lite'
-    windows.vm.guest = :windows
-    windows.vm.network :forwarded_port, guest: 22, host: 2222, id: 'ssh'
-    windows.vm.communicator = :winrm
-    windows.winrm.username = 'vagrant'
-    windows.winrm.password = 'vagrant'
+  config.vm.define :win2012 do |windows|
+    windows.vm.box = 'mwrock/Windows2012R2'
+    windows.vm.box_version = '0.6.1'
 
     windows.vm.provider :virtualbox do |vbox|
-      vbox.gui = true
+      vbox.gui = false
     end
 
-    windows.vm.provision :shell, path: 'script/prepare_win7.cmd'
-    # TODO: this should be run before syncing folders
-    windows.vm.provision :shell, path: 'script/increase_shell_limits.ps1'
-    # Need to reboot machine for Puppet installation to finish.
-    windows.vm.provision :reload
-    windows.vm.provision :puppet do |puppet|
-      puppet.options = %w[--verbose]
-      puppet.module_path = 'modules'
-      puppet.manifest_file = 'win7.pp'
-      puppet.facter = {
-        'firefox_version' => ENV['FIREFOX_VERSION'] || 'latest',
-        'phantomjs_version' => ENV['PHANTOMJS_VERSION'] || 'latest',
-        'chrome_version' => ENV['CHROME_VERSION'] || 'latest',
-        'chromedriver_version' => ENV['CHROMEDRIVER_VERSION'] || 'latest',
-      }
-    end
-    # Need to reboot machine for IE installation to finish.
-    windows.vm.provision :reload
+    configure_windows.call(windows)
   end
 
   config.vm.define :win10 do |windows|
     windows.vm.box = 'Microsoft/EdgeOnWindows10'
-    windows.vm.guest = :windows
-    windows.vm.communicator = :winrm
     windows.winrm.username = 'IEUser'
     windows.winrm.password = 'Passw0rd!'
 
@@ -62,15 +51,6 @@ Vagrant.configure(2) do |config|
       vbox.gui = true
     end
 
-    windows.vm.provision :shell, path: 'script/prepare_win10.cmd'
-    # Need to reboot machine for Puppet installation to finish.
-    windows.vm.provision :reload
-    windows.vm.provision :puppet do |puppet|
-      puppet.options = %w[--verbose]
-      puppet.module_path = 'modules'
-      puppet.manifest_file = 'win10.pp'
-    end
-    # Need to reboot machine for PATH to be updated.
-    windows.vm.provision :reload
+    configure_windows.call(windows)
   end
 end

@@ -1,5 +1,5 @@
 package { 'ruby':
-  ensure   => '2.3.0',
+  ensure   => '2.3.1',
   provider => 'chocolatey',
 }
 

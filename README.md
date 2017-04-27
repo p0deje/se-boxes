@@ -3,10 +3,10 @@
 Simple Vagrant + Puppet setup to easily test Selenium for different browser
 versions on different platforms.
 
-Currently provides with:
+Currently supports:
 
 * Windows 2012 x64 (Firefox, Chrome, IE11, PhantomJS)
-* Windows 10 x64 (Edge)
+* Windows 10 x64 (Firefox, Chrome, IE11, PhantomJS, Edge)
 
 ## Installation
 
@@ -36,14 +36,78 @@ $ librarian-puppet install
 
 ### Windows 2012
 
+Username: **vagrant**.
+Password: **vagrant**.
+
 ```bash
 $ vagrant up win2012
 ```
 
-Username: **vagrant**.
-Password: **vagrant**.
+The best way to connect to VM is to use RDP command:
 
-To quickly change browser/driver versions, you can do following:
+```bash
+$ vagrant rdp win2012
+```
+
+It will open Remote Desktop connection to VM. You can use
+[Microsoft Remote Desktop](https://itunes.apple.com/ru/app/microsoft-remote-desktop)
+or any other RDP client you like.
+
+### Windows 10
+
+Username: **IEUser**.
+Password: **Passw0rd!**.
+
+You will need to manually download Windows 10 Vagrant box from
+[Microsoft VMs](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/).
+
+After it's downloaded and unpacked, add it to Vagrant:
+
+```bash
+$ vagrant box add --name msedge-win10 dev-msedge.box
+```
+
+Now you can start VM:
+
+```bash
+$ vagrant up win10 --no-provision
+```
+
+Once VM is started, you'll see VirtualBox GUI which you should use to manually
+tweak VM so it allows provisioning:
+
+1. Go to "Control Panel".
+2. Open "Administrative Tools".
+3. Open "Local Security Policy".
+4. Open "Network List Management Policies".
+5. Open "Network".
+6. Switch to "Network Location" tab.
+7. Set "Location type" to "Private".
+8. Set "User permissions" to "User can change location".
+9. Go back to "Network List Management Policies".
+
+Next, we need to enable WinRM (at least on preview box):
+
+1. Run "Command Prompt" as administrator.
+2. Execute `winrm quickconfig -q`.
+
+Next, you might need to install VirtualBox Guest Additions (at least on preview box):
+
+1. Switch to VirtualBox VM window.
+2. Select "Devices" menu.
+3. Hit "Insert Guest Additions CD image..." menu entry.
+4. Switch inside VM.
+5. Install Guest Additions from CD.
+
+Next, restart and provision your VM:
+
+```bash
+$ vagrant reload win10 --provision
+```
+
+## Packages and Provision
+
+To quickly change browser/driver versions, you can do the following:
 
 ```bash
 $ export CHROME_VERSION="57.0.2987.110"
@@ -51,7 +115,7 @@ $ export CHROMEDRIVER_VERSION="2.28"
 $ export FIREFOX_VERSION="52.0.1"
 $ export GECKODRIVER_VERSION="0.15.0"
 $ export PHANTOMJS_VERSION="2.1.1"
-$ vagrant provision win7
+$ vagrant provision [VM]
 ```
 
 Refer to the following chocolatey packages to figure out available versions:
@@ -62,33 +126,29 @@ Refer to the following chocolatey packages to figure out available versions:
 * [selenium-gecko-driver](https://chocolatey.org/packages/selenium-gecko-driver)
 * [phantomjs](https://chocolatey.org/packages/phantomjs)
 
-The best way to connect to VM is to use `vagrant rdp win2012`. This command
-will open Remote Desktop connection to VM. You can use
-[Microsoft Remote Desktop](https://itunes.apple.com/ru/app/microsoft-remote-desktop)
-or any other RDP client.
+Additionally, the following tools are installed:
 
-### Windows 10
+* [git](https://chocolatey.org/packages/git) (obvious)
+* [conemu](https://chocolatey.org/packages/conemu) (better terminal emulator)
 
-```bash
-$ vagrant up win10
-```
+Refer to [`environments/windows/manifests`](environments/windows/manifests) for
+more information.
 
-The box should only be used for testing of Microsoft Edge driver.
+## Cleanup
 
-You need to manually install [Microsoft WebDriver](https://www.microsoft.com/en-us/download/details.aspx?id=48212) and
-[add it to PATH](https://msdn.microsoft.com/en-us/library/office/ee537574(v=office.14).aspx).
+Note that we use [linked clones](https://www.vagrantup.com/docs/virtualbox/configuration.html#linked-clones)
+of VMs, which means that in order to fully remove VM and box you need to:
+
+1. Remove linked VM using `vagrant destroy [VM]`.
+2. Manually remove master VM using VirtualBox.
+3. Remove box using `vagrant box destroy [BOX]`.
 
 ## Selenium
 
-By default, Vagrant tries to sync your Selenium sources from `../selenium`
-to `/selenium` directories. Source directory can be altered by exporting
-`SELENIUM_PATH` variable.
-
-Refer to Selenium [wiki](https://github.com/SeleniumHQ/selenium/wiki/Crazy-Fun-Build)
-page for build system details.
+If you want your Selenium sources directory be synced into VM, export `SELENIUM_PATH`
+environment variable. It will be accessible in `C:\selenium` inside VM.
 
 ## Watir
 
-By default, Vagrant tries to sync your Watir sources from `../watir`
-to `/watir` directories. Source directory can be altered by exporting
-`WATIR_PATH` variable.
+If you want your Watir sources directory be synced into VM, export `WATIR_PATH`
+environment variable. It will be accessible in `C:\watir` inside VM.

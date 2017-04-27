@@ -11,4 +11,5 @@ package { 'selenium-gecko-driver':
 windows_path { 'add-geckodriver':
   ensure    => present,
   directory => 'C:\tools\selenium',
+  require   => Package['selenium-gecko-driver'],
 }

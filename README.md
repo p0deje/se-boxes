@@ -98,6 +98,7 @@ Next, you might need to install VirtualBox Guest Additions (at least on preview 
 3. Hit "Insert Guest Additions CD image..." menu entry.
 4. Switch inside VM.
 5. Install Guest Additions from CD.
+6. Reboot to complete Guest Additions installation.
 
 Next, restart and provision your VM:
 

@@ -1,5 +1,5 @@
 package { 'ruby':
-  ensure   => '2.3.1',
+  ensure   => '2.3.3',
   provider => 'chocolatey',
 }
 
@@ -23,36 +23,7 @@ exec { 'install-rubydevkit':
 }
 
 exec { 'install-bundler':
-  command => 'gem.bat install bundler',
+  command => 'gem.cmd install bundler',
   path    => 'C:/tools/ruby23/bin',
-  require => [Package['ruby'], Exec['update-rubygems']],
-}
-
-# Update RubyGems to avoid SSL certificate error.
-# It should not be needed once Ruby 2.3.3 is available in Chocolatey.
-# See ferventcoder/chocolatey-packages#238.
-
-file { 'downloads-dir':
-  path   => 'C:\puppet-downloads',
-  ensure => directory,
-}
-
-pget { 'download-rubygems-update':
-  source  => 'https://rubygems.org/gems/rubygems-update-2.6.11.gem',
-  target  => 'C:/puppet-downloads',
-  require => File['downloads-dir'],
-}
-
-exec { 'install-rubygems-update':
-  command => 'gem.cmd install --local rubygems-update-2.6.11.gem',
-  path    => 'C:/tools/ruby23/bin',
-  creates => 'C:/tools/ruby23/bin/update_rubygems.bat',
-  cwd     => 'C:/puppet-downloads',
-  require => Pget['download-rubygems-update'],
-}
-
-exec { 'update-rubygems':
-  command => 'update_rubygems.bat',
-  path    => 'C:/tools/ruby23/bin',
-  require => Exec['install-rubygems-update'],
+  require => Package['ruby'],
 }

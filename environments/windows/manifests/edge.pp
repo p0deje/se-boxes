@@ -13,10 +13,11 @@ $versions.each |String $version, String $url| {
 
   # https://github.com/cyberious/puppet-pget/issues/19
   exec { "use-microsoft-webdriver-${version}":
-    command => "cmd /c \"mklink /h MicrosoftWebDriver.exe MicrosoftWebDriver${version}.exe\"",
-    onlyif  => "cmd /c \"ver | find \"${version}\"\"",
-    cwd     => 'C:/tools/selenium',
-    path    => $os['windows']['system32'],
-    require => Pget["download-microsoft-webdriver-${version}"],
+    command     => "cmd /c \"mklink /h MicrosoftWebDriver.exe MicrosoftWebDriver${version}.exe\"",
+    onlyif      => "cmd /c \"ver | find \"${version}\"\"",
+    cwd         => 'C:/tools/selenium',
+    path        => $os['windows']['system32'],
+    refreshonly => true,
+    subscribe   => Pget["download-microsoft-webdriver-${version}"],
   }
 }

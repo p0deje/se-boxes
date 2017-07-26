@@ -91,6 +91,19 @@ Next, we need to enable WinRM (at least on preview box):
 1. Run "Command Prompt" as administrator.
 2. Execute `winrm quickconfig -q`.
 
+If you encounter the following error:
+
+```
+WinRM firewall exception will not work since one of the network connection types
+on this machine is set to Public. Change the network connection type to either
+Domain or Private and try again.
+```
+
+Then make all networks private by the following:
+
+1. Run "Window PowerShell" as administrator.
+2. Execute `Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private`.
+
 Next, you might need to install VirtualBox Guest Additions (at least on preview box):
 
 1. Switch to VirtualBox VM window.

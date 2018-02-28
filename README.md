@@ -14,7 +14,7 @@ Make sure you have the following installed:
 
 * [Puppet Agent](https://docs.puppet.com/puppet/4.9/#getting-started) (tested on 4.9.0)
 * [Ruby](https://www.ruby-lang.org) (tested on 2.3.3)
-* [Vagrant](https://www.vagrantup.com) (tested on 1.9.3)
+* [Vagrant](https://www.vagrantup.com) (tested on 2.0.2)
 * [VirtualBox](https://www.virtualbox.org) (tested on 5.1.18)
 
 Now, clone repository:
@@ -60,6 +60,7 @@ Password: **Passw0rd!**.
 
 You will need to manually download Windows 10 Vagrant box from
 [Microsoft VMs](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/).
+The following has been tested on 16.16299.
 
 After it's downloaded and unpacked, add it to Vagrant:
 
@@ -86,7 +87,7 @@ tweak VM so it allows provisioning:
 8. Set "User permissions" to "User can change location".
 9. Go back to "Network List Management Policies".
 
-Next, we need to enable WinRM (at least on preview box):
+Next, we might need to enable WinRM (at least on preview box):
 
 1. Run "Command Prompt" as administrator.
 2. Execute `winrm quickconfig -q`.
@@ -113,7 +114,7 @@ Next, you might need to install VirtualBox Guest Additions (at least on preview 
 5. Install Guest Additions from CD.
 6. Reboot to complete Guest Additions installation.
 
-Next, restart and provision your VM:
+Finally, restart and provision your VM:
 
 ```bash
 $ vagrant reload win10 --provision

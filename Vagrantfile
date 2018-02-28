@@ -3,7 +3,7 @@ Vagrant.configure(2) do |config|
     vbox.linked_clone = true
   end
 
-  config.vm.synced_folder ENV['SELENIUM_PATH'], '/selenium' if Dir.exist?(ENV['SELENIUM_PATH'])
+  config.vm.synced_folder ENV['SELENIUM_PATH'], '/selenium', type: 'smb' if Dir.exist?(ENV['SELENIUM_PATH'])
   config.vm.synced_folder ENV['WATIR_PATH'], '/watir' if Dir.exist?(ENV['WATIR_PATH'])
 
   configure_windows = proc do |windows|

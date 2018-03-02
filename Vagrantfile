@@ -3,8 +3,18 @@ Vagrant.configure(2) do |config|
     vbox.linked_clone = true
   end
 
-  config.vm.synced_folder ENV['SELENIUM_PATH'], '/selenium', type: 'smb' if Dir.exist?(ENV['SELENIUM_PATH'])
-  config.vm.synced_folder ENV['WATIR_PATH'], '/watir' if Dir.exist?(ENV['WATIR_PATH'])
+  sync_folders = proc do |box|
+    box.vm.synced_folder ENV['WATIR_PATH'], '/watir' if Dir.exist?(ENV['WATIR_PATH'])
+    if Dir.exist?(ENV['SELENIUM_PATH'])
+      # Default VirtualBox synced folder creates a UNC path, which is not supported
+      # by Buck (see facebook/buck#1269). The same applies to Samba and NFS.
+      # Our only option is RSync.
+      box.vm.synced_folder ENV['SELENIUM_PATH'], '/cygdrive/c/selenium',
+                           type: 'rsync',
+                           rsync__exclude: %w[buck-out/ build/ rb/.bundle/ .buckd/ .git/ .github/],
+                           rsync__verbose: true
+    end
+  end
 
   configure_windows = proc do |windows|
     windows.vm.guest = :windows
@@ -32,6 +42,7 @@ Vagrant.configure(2) do |config|
       puppet.environment = 'windows'
       puppet.environment_path = 'environments'
       puppet.facter = {
+        'username' => windows.ssh.username,
         'chrome_version' => ENV['CHROME_VERSION'] || 'latest',
         'chromedriver_version' => ENV['CHROMEDRIVER_VERSION'] || 'latest',
         'firefox_version' => ENV['FIREFOX_VERSION'] || 'latest',
@@ -45,6 +56,7 @@ Vagrant.configure(2) do |config|
     windows.vm.box = 'mwrock/Windows2012R2'
     windows.vm.box_version = '0.6.1'
     configure_windows.call(windows)
+    sync_folders.call(windows)
   end
 
   config.vm.define :win10 do |windows|
@@ -52,17 +64,25 @@ Vagrant.configure(2) do |config|
     windows.vm.provider(:virtualbox) do |vbox|
       vbox.gui = true
     end
+
+    windows.ssh.username = 'IEUser'
+    windows.winrm.username = 'IEUser'
+    windows.winrm.password = 'Passw0rd!'
+
     configure_windows.call(windows)
 
-    if !File.exist?('.vagrant/machines/win10/virtualbox/action_provision') && ARGV.include?('--no-provision')
+    provisioned = File.exist?('.vagrant/machines/win10/virtualbox/action_provision')
+    provision_disabled = ARGV.include?('--no-provision')
+
+    if !provisioned && provision_disabled
       windows.vm.communicator = :ssh
-      windows.ssh.username = 'IEUser'
       windows.ssh.password = 'Passw0rd!'
       windows.ssh.insert_key = false
     else
       windows.vm.communicator = :winrm
-      windows.winrm.username = 'IEUser'
-      windows.winrm.password = 'Passw0rd!'
+      windows.ssh.private_key_path = 'keys/id_rsa'
     end
+
+    sync_folders.call(windows) if provisioned
   end
 end

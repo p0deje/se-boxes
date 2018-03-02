@@ -163,6 +163,13 @@ of VMs, which means that in order to fully remove VM and box you need to:
 If you want your Selenium sources directory be synced into VM, export `SELENIUM_PATH`
 environment variable. It will be accessible in `C:\selenium` inside VM.
 
+Please note that on Windows 10 box you might need to restart Vagrant to
+pick up Selenium sources after provisioning:
+
+```bash
+$ vagrant reload win10 --no-provision
+```
+
 ## Watir
 
 If you want your Watir sources directory be synced into VM, export `WATIR_PATH`

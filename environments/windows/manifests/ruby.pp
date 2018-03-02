@@ -1,5 +1,5 @@
 package { 'ruby':
-  ensure   => '2.5.0.1',
+  ensure   => '2.0.0.64800',
   provider => 'chocolatey',
 }
 
@@ -11,19 +11,19 @@ package { 'ruby2.devkit':
 
 file { 'config-rubydevkit':
   path    => 'C:/tools/DevKit2/config.yml',
-  content => '- C:/tools/ruby25',
+  content => '- C:/tools/ruby200',
   require => Package['ruby2.devkit'],
 }
 
 exec { 'install-rubydevkit':
   command => 'ruby dk.rb install',
-  path    => 'C:/tools/ruby25/bin',
+  path    => 'C:/tools/ruby200/bin',
   cwd     => 'C:/tools/DevKit2',
   require => File['config-rubydevkit'],
 }
 
 exec { 'install-bundler':
-  command => 'gem.cmd install bundler',
-  path    => 'C:/tools/ruby25/bin',
+  command => 'gem.bat install bundler',
+  path    => 'C:/tools/ruby200/bin',
   require => Package['ruby'],
 }

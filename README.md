@@ -12,10 +12,10 @@ Currently supports:
 
 Make sure you have the following installed:
 
-* [Puppet Agent](https://docs.puppet.com/puppet/4.9/#getting-started) (tested on 4.9.0)
-* [Ruby](https://www.ruby-lang.org) (tested on 2.3.3)
-* [Vagrant](https://www.vagrantup.com) (tested on 2.0.2)
-* [VirtualBox](https://www.virtualbox.org) (tested on 5.1.18)
+* [Puppet Agent](https://docs.puppet.com/puppet/4.9/#getting-started) (tested on 4.10.4)
+* [Ruby](https://www.ruby-lang.org) (tested on 2.5.1)
+* [Vagrant](https://www.vagrantup.com) (tested on 2.1.4)
+* [VirtualBox](https://www.virtualbox.org) (tested on 5.2.14)
 
 Now, clone repository:
 
@@ -29,15 +29,15 @@ You need to install all Puppet dependencies first:
 ```bash
 $ gem install librarian-puppet
 $ cd environments/windows/
-$ librarian-puppet install
+$ librarian-puppet install --clean --verbose
 ```
 
 ## Usage
 
 ### Windows 2012
 
-Username: **vagrant**.
-Password: **vagrant**.
+> Username: **vagrant**<br />
+> Password: **vagrant**<br />
 
 ```bash
 $ vagrant up win2012
@@ -55,12 +55,12 @@ or any other RDP client you like.
 
 ### Windows 10
 
-Username: **IEUser**.
-Password: **Passw0rd!**.
+> Username: **IEUser**<br />
+> Password: **Passw0rd!**<br />
 
 You will need to manually download Windows 10 Vagrant box from
 [Microsoft VMs](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/).
-The following has been tested on 16.16299.
+The following has been tested on 17.17134.
 
 After it's downloaded and unpacked, add it to Vagrant:
 
@@ -105,19 +105,11 @@ Then make all networks private by the following:
 1. Run "Window PowerShell" as administrator.
 2. Execute `Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private`.
 
-Next, you might need to install VirtualBox Guest Additions (at least on preview box):
-
-1. Switch to VirtualBox VM window.
-2. Select "Devices" menu.
-3. Hit "Insert Guest Additions CD image..." menu entry.
-4. Switch inside VM.
-5. Install Guest Additions from CD.
-6. Reboot to complete Guest Additions installation.
-
 Finally, restart and provision your VM:
 
 ```bash
-$ vagrant reload win10 --provision
+$ vagrant reload win10 --no-provision
+$ vagrant provision win10
 ```
 
 ## Packages and Provision

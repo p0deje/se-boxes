@@ -162,6 +162,13 @@ pick up Selenium sources after provisioning:
 $ vagrant reload win10 --no-provision
 ```
 
+The synchronization is done using RSync so if you want to modify files inside host
+machine and automatically synchronize them into VM, don't forget to run:
+
+```bash
+$ vagrant rsync-auto win10
+```
+
 ## Watir
 
 If you want your Watir sources directory be synced into VM, export `WATIR_PATH`

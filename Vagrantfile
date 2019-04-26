@@ -47,7 +47,6 @@ Vagrant.configure(2) do |config|
         'chromedriver_version' => ENV['CHROMEDRIVER_VERSION'] || 'latest',
         'firefox_version' => ENV['FIREFOX_VERSION'] || 'latest',
         'geckodriver_version' => ENV['GECKODRIVER_VERSION'] || 'latest',
-        'phantomjs_version' => ENV['PHANTOMJS_VERSION'] || 'latest',
       }
     end
   end

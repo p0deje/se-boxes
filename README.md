@@ -5,8 +5,8 @@ versions on different platforms.
 
 Currently supports:
 
-* Windows 2012 x64 (Firefox, Chrome, IE11, PhantomJS)
-* Windows 10 x64 (Firefox, Chrome, IE11, PhantomJS, Edge)
+* Windows 2012 x64 (Firefox, Chrome, IE11)
+* Windows 10 x64 (Firefox, Chrome, IE11, Edge)
 
 ## Installation
 
@@ -121,7 +121,6 @@ $ export CHROME_VERSION="57.0.2987.110"
 $ export CHROMEDRIVER_VERSION="2.28"
 $ export FIREFOX_VERSION="52.0.1"
 $ export GECKODRIVER_VERSION="0.15.0"
-$ export PHANTOMJS_VERSION="2.1.1"
 $ vagrant provision [VM]
 ```
 
@@ -131,7 +130,6 @@ Refer to the following chocolatey packages to figure out available versions:
 * [chromedriver](https://chocolatey.org/packages/chromedriver)
 * [firefox](https://chocolatey.org/packages/firefox)
 * [selenium-gecko-driver](https://chocolatey.org/packages/selenium-gecko-driver)
-* [phantomjs](https://chocolatey.org/packages/phantomjs)
 
 Additionally, the following tools are installed:
 

@@ -4,7 +4,7 @@ package { 'ruby':
 }
 
 exec { 'install-bundler':
-  command => 'gem.cmd install bundler',
+  command => 'gem.cmd install bundler -v 1.17.3',
   path    => 'C:/tools/ruby25/bin',
   require => Package['ruby'],
 }

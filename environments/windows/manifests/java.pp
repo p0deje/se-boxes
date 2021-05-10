@@ -1,4 +1,4 @@
-package { 'jdk8':
+package { 'jdk11':
   ensure   => latest,
   provider => 'chocolatey',
 }

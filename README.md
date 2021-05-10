@@ -46,61 +46,33 @@ or any other RDP client you like.
 
 ### Windows 10
 
-> Username: **IEUser**<br />
-> Password: **Passw0rd!**<br />
-
-You will need to manually download Windows 10 Vagrant box from
-[Microsoft VMs](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/).
-The following has been tested on 17.17134.
-
-After it's downloaded and unpacked, add it to Vagrant:
-
-```bash
-$ vagrant box add --name msedge-win10 dev-msedge.box
-```
-
-Now you can start VM:
+> Username: **vagrant**<br />
+> Password: **vagrant**<br />
 
 ```bash
 $ vagrant up win10 --no-provision
 ```
 
-Once VM is started, you'll see VirtualBox GUI which you should use to manually
-tweak VM so it allows provisioning:
-
-1. Go to "Control Panel".
-2. Open "Administrative Tools".
-3. Open "Local Security Policy".
-4. Open "Network List Management Policies".
-5. Open "Network".
-6. Switch to "Network Location" tab.
-7. Set "Location type" to "Private".
-8. Set "User permissions" to "User can change location".
-9. Go back to "Network List Management Policies".
-
-Next, we might need to enable WinRM (at least on preview box):
-
-1. Run "Command Prompt" as administrator.
-2. Execute `winrm quickconfig -q`.
-
-If you encounter the following error:
-
-```
-WinRM firewall exception will not work since one of the network connection types
-on this machine is set to Public. Change the network connection type to either
-Domain or Private and try again.
-```
-
-Then make all networks private by the following:
-
-1. Run "Window PowerShell" as administrator.
-2. Execute `Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private`.
-
-Finally, restart and provision your VM:
+Once VM is started, it is going to run some configuration and then you'll need
+to reboot VM.
 
 ```bash
-$ vagrant reload win10 --no-provision
-$ vagrant provision win10
+$ vagrant reload win10
+```
+
+The best way to connect to VM is to use RDP and/or SSH:
+
+```bash
+$ vagrant rdp win10
+``````
+It will open Remote Desktop connection to VM. You can use
+[Microsoft Remote Desktop](https://itunes.apple.com/ru/app/microsoft-remote-desktop)
+or any other RDP client you like.
+
+You can also connect using SSH:
+
+```bash
+$ vagrant ssh win10
 ```
 
 ## Packages and Provision
@@ -144,8 +116,7 @@ of VMs, which means that in order to fully remove VM and box you need to:
 If you want your Selenium sources directory be synced into VM, export `SELENIUM_PATH`
 environment variable. It will be accessible in `C:\selenium` inside VM.
 
-Please note that on Windows 10 box you might need to restart Vagrant to
-pick up Selenium sources after provisioning:
+Please note that on Windows 10 box you might need to restart Vagrant to pick up Selenium sources after provisioning:
 
 ```bash
 $ vagrant reload win10 --no-provision

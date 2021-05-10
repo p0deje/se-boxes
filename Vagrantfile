@@ -4,14 +4,18 @@ Vagrant.configure(2) do |config|
   end
 
   sync_folders = proc do |box|
-    box.vm.synced_folder ENV['WATIR_PATH'], '/watir' if Dir.exist?(ENV['WATIR_PATH'])
-    if Dir.exist?(ENV['SELENIUM_PATH'])
+    box.vm.synced_folder ENV['WATIR_PATH'], '/watir' if ENV['WATIR_PATH'] && Dir.exist?(ENV['WATIR_PATH'])
+    if ENV['SELENIUM_PATH'] && Dir.exist?(ENV['SELENIUM_PATH'])
       # Default VirtualBox synced folder creates a UNC path, which is not supported
       # by Buck (see facebook/buck#1269). The same applies to Samba and NFS.
       # Our only option is RSync.
       box.vm.synced_folder ENV['SELENIUM_PATH'], '/cygdrive/c/selenium',
                            type: 'rsync',
-                           rsync__exclude: %w[buck-out/ build/ rb/.bundle/ .buckd/ .git/ .github/],
+                           rsync__exclude: %w[
+                             bazel-bin bazel-out bazel-testlogs bazel-selenium bazel-genfiles
+                             build/ .git/ .github/
+                             rb/.bundle/ rb/Gemfile.lock
+                           ],
                            rsync__verbose: true
     end
   end
@@ -59,29 +63,11 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.define :win10 do |windows|
-    windows.vm.box = 'msedge-win10'
-    windows.vm.provider(:virtualbox) do |vbox|
-      vbox.gui = true
-    end
-
-    windows.ssh.username = 'IEUser'
-    windows.winrm.username = 'IEUser'
-    windows.winrm.password = 'Passw0rd!'
-
+    windows.vm.box = 'gusztavvargadr/windows-10'
+    windows.vm.box_version = '2009.0.2012'
     configure_windows.call(windows)
 
     provisioned = File.exist?('.vagrant/machines/win10/virtualbox/action_provision')
-    provision_disabled = ARGV.include?('--no-provision')
-
-    if !provisioned && provision_disabled
-      windows.vm.communicator = :ssh
-      windows.ssh.password = 'Passw0rd!'
-      windows.ssh.insert_key = false
-    else
-      windows.vm.communicator = :winrm
-      windows.ssh.private_key_path = 'keys/id_rsa'
-    end
-
     sync_folders.call(windows) if provisioned
   end
 end

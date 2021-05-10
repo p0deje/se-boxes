@@ -23,15 +23,6 @@ Now, clone repository:
 $ git clone https://github.com/p0deje/se-boxes.git
 $ cd se-boxes/
 ```
-
-You need to install all Puppet dependencies first:
-
-```bash
-$ gem install librarian-puppet
-$ cd environments/windows/
-$ librarian-puppet install --clean --verbose
-```
-
 ## Usage
 
 ### Windows 2012
@@ -171,3 +162,14 @@ $ vagrant rsync-auto win10
 
 If you want your Watir sources directory be synced into VM, export `WATIR_PATH`
 environment variable. It will be accessible in `C:\watir` inside VM.
+
+## Puppet Modules
+
+Puppet modules are staged to this repository. In order to install new modules
+or upgrade existing ones, you will need `librarian-puppet` Ruby gem:
+
+```bash
+gem install librarian-puppet
+cd environments/windows/
+librarian-puppet install --clean --verbose
+```

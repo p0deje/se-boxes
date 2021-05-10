@@ -1,4 +1,4 @@
-package { 'jdk11':
-  ensure   => latest,
+package { 'openjdk':
+  ensure   => '11.0.2.01',
   provider => 'chocolatey',
 }

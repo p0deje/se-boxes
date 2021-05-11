@@ -1,7 +1,9 @@
-package { 'bazelisk':
-  ensure   => latest,
+# Bazelisk might require some additional dependencies and
+# doesn't provide with bazel command, so let's avoid it for now.
+package { 'bazel':
+  ensure   => '4.0.0',
   provider => 'chocolatey',
-  require => Package['msys2'],
+  require  => Package['msys2'],
 }
 
 package { 'msys2':

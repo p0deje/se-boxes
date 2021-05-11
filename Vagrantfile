@@ -14,6 +14,7 @@ Vagrant.configure(2) do |config|
                            rsync__exclude: %w[
                              bazel-bin bazel-out bazel-testlogs bazel-selenium bazel-genfiles
                              build/ .git/ .github/
+                             node_modules/
                              rb/.bundle/ rb/Gemfile.lock
                            ],
                            rsync__verbose: true
